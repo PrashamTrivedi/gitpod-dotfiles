@@ -1,4 +1,9 @@
-git config user.name $GITHUB_USER_NAME && git config user.email $GITHUB_USER_EMAIL
+curl "https://github.com/PrashamTrivedi/gitconfig-provider/releases/download/1.21/gitconfig-provider_1.21_Linux_arm64.tar.gz" -o "gitconfig-provider.tar.gz"
+tar -xvf gitconfig-provider.tar.gz
+
+gitconfig-provider addConfig -provider=Github -key=user.email -value=$GITHUB_USER_EMAIL
+gitconfig-provider addConfig -provider=Github -key=user.name -value=$GITHUB_USER_NAME
+
 alias gitpull="git stash && git pull && git stash pop"
 alias gitpush="git push && git push --tags && git stash clear"
 
