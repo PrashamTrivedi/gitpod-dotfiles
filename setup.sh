@@ -13,9 +13,9 @@ unzip awscliv2.zip
 sudo ./aws/install
 aws --version
 
-gp env PATH="$HOME/gitconfig-provider:$PATH"
-gp env AWS_ACCESS_KEY_ID=$AWS_PERSONAL_ACCESS_KEY_ID
-gp env AWS_SECRET_ACCESS_KEY=$AWS_PERSONAL_SECRET_ACCESS_KEY
-gp env AWS_DEFAULT_REGION=ap-south-1
+eval $(gp env PATH="$HOME/gitconfig-provider:$PATH")
+eval $(gp env AWS_ACCESS_KEY_ID=$AWS_PERSONAL_ACCESS_KEY_ID)
+eval $(gp env AWS_SECRET_ACCESS_KEY=$AWS_PERSONAL_SECRET_ACCESS_KEY)
+eval $(gp env AWS_DEFAULT_REGION=ap-south-1)
 alias gitpull="git stash && git pull && git stash pop"
 alias gitpush="git push && git push --tags && git stash clear"
