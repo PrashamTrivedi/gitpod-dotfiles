@@ -13,4 +13,4 @@ unzip awscliv2.zip
 sudo ./aws/install
 aws --version
 
-source ./environments.sh
+. ./environments.sh
