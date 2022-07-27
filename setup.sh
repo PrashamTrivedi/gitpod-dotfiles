@@ -13,7 +13,7 @@ echo $(pwd)
 
 # Copy gitconfit provider bashrc
 chmod +x gitconfig-provider-bashrc
-cp ~/.dotfliles/gitconfig-provider-bashrc ~/.bashrc.d/gitconfig-provider-bashrc
+cp ~/.dotfliles/*gitconfig-provider-bashrc ~/.bashrc.d/gitconfig-provider-bashrc
 
 
 # Install and verify AWS
@@ -24,11 +24,11 @@ aws --version
 
 # Copy aws to Bashrc
 chmod +x aws
-cp ~/.dotfliles/aws ~/.bashrc.d/aws
+cp ~/.dotfliles/*aws ~/.bashrc.d/aws
 
 # Copy git-alias to Bashrc
 chmod +x git-alias
-cp ~/.dotfliles/git-alias ~/.bashrc.d/git-alias
+cp ~/.dotfliles/*git-alias ~/.bashrc.d/git-alias
 
 echo $(pwd)
 
