@@ -1,0 +1,2 @@
+alias gitpull="git stash && git pull && git stash pop"
+alias gitpush="git push && git push --tags && git stash clear"
