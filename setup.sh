@@ -24,11 +24,11 @@ aws --version
 
 # Copy aws to Bashrc
 chmod +x ~/.dotfiles/aws
-cp ~/.dotfiles/*aws ~/.bashrc.d/aws
+cp ~/.dotfiles/aws ~/.bashrc.d/aws
 
 # Copy git-alias to Bashrc
 chmod +x ~/.dotfiles/git-alias
-cp ~/.dotfiles/*git-alias ~/.bashrc.d/git-alias
+cp ~/.dotfiles/git-alias ~/.bashrc.d/git-alias
 
 echo $(pwd)
 
