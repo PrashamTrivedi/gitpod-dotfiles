@@ -2,14 +2,14 @@
 
 # Install Gitconfig Provider
 echo CurrentDir is
-echo $pwd 
+echo $(pwd) 
 
 curl -L "https://github.com/PrashamTrivedi/gitconfig-provider/releases/download/1.21/gitconfig-provider_1.21_Linux_x86_64.tar.gz" -o "gitconfig-provider.tar.gz"
 tar -xvf gitconfig-provider.tar.gz
 chmod +x gitconfig-provider
 
 echo CurrentDir is
-echo $pwd 
+echo $(pwd) 
 
 # Copy gitconfit provider bashrc
 chmod +x gitconfig-provider-bashrc
@@ -33,4 +33,4 @@ cp .dotfliles/aws ~/.bashrc.d/aws
 chmod +x git-alias
 cp .dotfliles/git-alias ~/.bashrc.d/git-alias
 
-echo $pwd
+echo $(pwd)
