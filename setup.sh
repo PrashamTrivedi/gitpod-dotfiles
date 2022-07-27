@@ -24,7 +24,7 @@ aws --version
 
 # Copy aws to Bashrc
 chmod +x aws
-cp .dotfliles/aws ~/.bashrc.d/aws
+cp ~/.dotfliles/aws ~/.bashrc.d/aws
 
 # Copy git-alias to Bashrc
 chmod +x git-alias
