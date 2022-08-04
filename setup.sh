@@ -1,15 +1,11 @@
 #!/bin/sh
 
 # Install Gitconfig Provider
-echo CurrentDir is
-echo $(pwd) 
 
-curl -L "https://github.com/PrashamTrivedi/gitconfig-provider/releases/download/1.22/gitconfig-provider_1.22_Linux_x86_64.tar.gz" -o "gitconfig-provider.tar.gz"
+
+curl -L "https://github.com/PrashamTrivedi/gitconfig-provider/releases/latest/download/gitconfig-provider_Linux_x86_64.tar.gz" -o "gitconfig-provider.tar.gz"
 tar -xvf gitconfig-provider.tar.gz
 chmod +x gitconfig-provider
-
-echo CurrentDir is
-echo $(pwd) 
 
 # Copy gitconfit provider bashrc
 chmod +x ~/.dotfiles/gitconfig-provider-bashrc
@@ -30,8 +26,7 @@ cp ~/.dotfiles/aws ~/.bashrc.d/aws
 chmod +x ~/.dotfiles/git-alias
 cp ~/.dotfiles/git-alias ~/.bashrc.d/git-alias
 
-echo $(pwd)
 
 # Apply Gitconfig provider for github
-~/gitconfig-provider addConfig -provider=Github -key=user.email -value=$GITHUB_USER_EMAIL
-~/gitconfig-provider addConfig -provider=Github -key=user.name -value=$GITHUB_USER_NAME
+~/gitconfig-provider addConfig --provider=Github --key=user.email --value=$GITHUB_USER_EMAIL
+~/gitconfig-provider addConfig --provider=Github -=key=user.name --value=$GITHUB_USER_NAME
