@@ -33,5 +33,5 @@ cp ~/.dotfiles/git-alias ~/.bashrc.d/git-alias
 echo $(pwd)
 
 # Apply Gitconfig provider for github
-~/.gitconfig-provider addConfig -provider=Github -key=user.email -value=$GITHUB_USER_EMAIL
-~/.gitconfig-provider addConfig -provider=Github -key=user.name -value=$GITHUB_USER_NAME
+~/gitconfig-provider addConfig -provider=Github -key=user.email -value=$GITHUB_USER_EMAIL
+~/gitconfig-provider addConfig -provider=Github -key=user.name -value=$GITHUB_USER_NAME
