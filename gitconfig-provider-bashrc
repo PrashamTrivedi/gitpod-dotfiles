@@ -1,1 +1,2 @@
+export PATH="$HOME:$PATH"
 export PATH="$HOME/gitconfig-provider:$PATH"
