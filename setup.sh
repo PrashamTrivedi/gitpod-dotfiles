@@ -8,8 +8,8 @@ tar -xvf gitconfig-provider.tar.gz
 chmod +x gitconfig-provider
 
 # Copy gitconfit provider bashrc
-chmod +x ./gitconfig-provider-bashrc
-cp ./gitconfig-provider-bashrc ~/.bashrc.d/gitconfig-provider-bashrc
+chmod +x gitconfig-provider-bashrc
+cp gitconfig-provider-bashrc ~/.bashrc.d/gitconfig-provider-bashrc
 
 
 # Install and verify AWS
@@ -19,12 +19,12 @@ sudo ./aws/install
 aws --version
 
 # Copy aws to Bashrc
-chmod +x ./awsConfig
-cp ./awsConfig ~/.bashrc.d/awsConfig
+chmod +x awsConfig
+cp awsConfig ~/.bashrc.d/awsConfig
 
 # Copy git-alias to Bashrc
-chmod +x ./git-alias
-cp ./git-alias ~/.bashrc.d/git-alias
+chmod +x git-alias
+cp git-alias ~/.bashrc.d/git-alias
 
 
 # Apply Gitconfig provider for github
