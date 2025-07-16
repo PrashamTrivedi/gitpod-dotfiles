@@ -19,7 +19,7 @@ set -g HISTFILESIZE 2000
 # fzf settings
 set -gx FZF_ALT_A_OPTS "--preview 'tree -C {} | head -200'"
 set fzf_preview_file_cmd batcat -n
-fzf_configure_bindings --directory=\cF --git_status=\cg --history=\ch
+# Note: fzf_configure_bindings will be called after fzf.fish is properly installed
 
 # Functions
 function searchdir
@@ -54,21 +54,26 @@ function rg-fzf
 end
 
 function fzf_git_branch
-    git fetch --all --quiet
-    set selected_branch (
-        git for-each-ref --format='%(refname:short) %(upstream:short)' refs/heads refs/remotes |
-        awk '{if ($2) {print $1 " (" $2 ")"} else {print $1}}' |
-        fzf --height 40% --layout=reverse --preview 'git log --oneline --graph --date=short --color=always --pretty="format:%C(auto)%cd %h%d %s" {1}' --preview-window right:50% |
-        awk '{print $1}'
-    )
+    if command -v fzf >/dev/null 2>&1
+        git fetch --all --quiet
+        set selected_branch (
+            git for-each-ref --format='%(refname:short) %(upstream:short)' refs/heads refs/remotes |
+            awk '{if ($2) {print $1 " (" $2 ")"} else {print $1}}' |
+            fzf --height 40% --layout=reverse --preview 'git log --oneline --graph --date=short --color=always --pretty="format:%C(auto)%cd %h%d %s" {1}' --preview-window right:50% |
+            awk '{print $1}'
+        )
 
-    if test -n "$selected_branch"
-        if string match -q 'origin/*' $selected_branch
-            set local_branch (string replace 'origin/' '' $selected_branch)
-            git checkout -b $local_branch $selected_branch
-        else
-            git checkout $selected_branch
+        if test -n "$selected_branch"
+            if string match -q 'origin/*' $selected_branch
+                set local_branch (string replace 'origin/' '' $selected_branch)
+                git checkout -b $local_branch $selected_branch
+            else
+                git checkout $selected_branch
+            end
         end
+    else
+        echo "fzf not found. Please install fzf to use this function."
+        git branch -a
     end
 end
 
@@ -245,7 +250,6 @@ abbr -a openFishConfig 'code ~/.config/fish/config.fish'
 abbr -a ll 'ls -lah'
 abbr -a la 'ls -la'
 abbr -a lsAlias 'cat ~/.config/fish/config.fish | grep abbr'
-abbr -a aiderCodeLlama 'aider --openai-api-base https://openrouter.ai/api/v1 --model meta-llama/codellama-34b-instruct --openai-api-key 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'
 abbr -a fserve 'deno run --allow-net --allow-read jsr:@std/http/file_server'
 abbr -a cx 'sudo chmod +x'
 abbr -a mitra 'ComputerUseAgent'
@@ -309,7 +313,6 @@ end
 # Key bindings
 bind \cg 'fzf_git_branch'
 bind \b 'backward-kill-word'
-bind \e\x7F '_fzf_search_history'
 bind \eC 'code .'
 bind \eg 'git status'
 bind \eL 'llm logs list'

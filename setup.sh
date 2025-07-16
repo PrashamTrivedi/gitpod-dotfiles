@@ -47,16 +47,56 @@ echo 'export PATH="$HOME/.local/share/fnm:$PATH"' >> ~/.bashrc
 curl -LsSf https://astral.sh/uv/install.sh | sh
 export PATH="$HOME/.local/bin:$PATH"
 
-# Note: System tools (fish, tmux, fzf, ripgrep, bat, tree) should be installed manually
-# These tools are available via package managers on all systems:
-# - macOS: brew install fish tmux fzf ripgrep bat tree
-# - Ubuntu/Debian: sudo apt-get install fish tmux fzf ripgrep bat tree gawk  
-# - Alpine: sudo apk add fish tmux fzf ripgrep bat tree gawk
-# - Arch: sudo pacman -S fish tmux fzf ripgrep bat tree gawk
+# Install system tools (fish, tmux, fzf, ripgrep, bat, tree) automatically
+# Detect package manager and install tools
+install_system_tools() {
+    echo "🔧 Installing system tools..."
+    
+    # Detect OS and package manager
+    if command -v brew >/dev/null 2>&1; then
+        echo "🍺 Installing tools with Homebrew..."
+        brew install fish tmux fzf ripgrep bat tree || echo "⚠️  Some tools may have failed to install"
+    elif command -v apt-get >/dev/null 2>&1; then
+        echo "📦 Installing tools with apt-get..."
+        sudo apt-get update
+        sudo apt-get install -y fish tmux fzf ripgrep bat tree gawk || echo "⚠️  Some tools may have failed to install"
+    elif command -v apk >/dev/null 2>&1; then
+        echo "🏔️  Installing tools with apk..."
+        sudo apk add fish tmux fzf ripgrep bat tree gawk || echo "⚠️  Some tools may have failed to install"
+    elif command -v pacman >/dev/null 2>&1; then
+        echo "🏛️  Installing tools with pacman..."
+        sudo pacman -S --noconfirm fish tmux fzf ripgrep bat tree gawk || echo "⚠️  Some tools may have failed to install"
+    elif command -v yum >/dev/null 2>&1; then
+        echo "🔴 Installing tools with yum..."
+        sudo yum install -y fish tmux fzf ripgrep bat tree gawk || echo "⚠️  Some tools may have failed to install"
+    elif command -v dnf >/dev/null 2>&1; then
+        echo "🔵 Installing tools with dnf..."
+        sudo dnf install -y fish tmux fzf ripgrep bat tree gawk || echo "⚠️  Some tools may have failed to install"
+    else
+        echo "⚠️  No supported package manager found. Please install manually:"
+        echo "   - macOS: brew install fish tmux fzf ripgrep bat tree"
+        echo "   - Ubuntu/Debian: sudo apt-get install fish tmux fzf ripgrep bat tree gawk"
+        echo "   - Alpine: sudo apk add fish tmux fzf ripgrep bat tree gawk"
+        echo "   - Arch: sudo pacman -S fish tmux fzf ripgrep bat tree gawk"
+        return 1
+    fi
+    
+    # Verify installations
+    echo "✅ Tool installation summary:"
+    command -v fish >/dev/null 2>&1 && echo "  ✅ fish" || echo "  ❌ fish"
+    command -v tmux >/dev/null 2>&1 && echo "  ✅ tmux" || echo "  ❌ tmux"
+    command -v fzf >/dev/null 2>&1 && echo "  ✅ fzf" || echo "  ❌ fzf"
+    command -v rg >/dev/null 2>&1 && echo "  ✅ ripgrep" || echo "  ❌ ripgrep"
+    command -v bat >/dev/null 2>&1 && echo "  ✅ bat" || echo "  ❌ bat"
+    command -v tree >/dev/null 2>&1 && echo "  ✅ tree" || echo "  ❌ tree"
+}
+
+# Install system tools
+install_system_tools
 
 # Install Fisher package manager for Fish shell (only if fish is available)
 if command -v fish >/dev/null 2>&1; then
-    fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher"
+    fish -c "curl -sL https://raw.githubusercontent.com/jorgebucaran/fisher/main/functions/fisher.fish | source && fisher install jorgebucaran/fisher" || echo "⚠️  Fisher installation failed"
     echo "✅ Fisher package manager installed"
 else
     echo "⚠️  Fish shell not found. Skipping Fisher installation."
@@ -129,19 +169,20 @@ uv tool install aider-chat
 # fnm was already installed at the beginning, just ensure PATH is set
 export PATH="$HOME/.local/share/fnm:$PATH"
 
-# Install fzf.fish plugin for fish shell (only if fish is available)
+# Setup Fish shell configuration (only if fish is available)
 if command -v fish >/dev/null 2>&1; then
-    mkdir -p ~/.config/fish/functions
-    curl -sL https://raw.githubusercontent.com/PatrickF1/fzf.fish/main/functions/fzf_configure_bindings.fish > ~/.config/fish/functions/fzf_configure_bindings.fish
-    curl -sL https://raw.githubusercontent.com/PatrickF1/fzf.fish/main/functions/_fzf_search_history.fish > ~/.config/fish/functions/_fzf_search_history.fish
-    curl -sL https://raw.githubusercontent.com/PatrickF1/fzf.fish/main/functions/_fzf_search_directory.fish > ~/.config/fish/functions/_fzf_search_directory.fish
-    curl -sL https://raw.githubusercontent.com/PatrickF1/fzf.fish/main/functions/_fzf_search_git_status.fish > ~/.config/fish/functions/_fzf_search_git_status.fish
-
     # Setup Fish shell configuration
     mkdir -p ~/.config/fish
     cp "$SCRIPT_DIR/fish-config.fish" ~/.config/fish/config.fish
 
+    # Skip fzf.fish plugin installation due to compatibility issues
+    # Users can manually install fzf.fish if they have a compatible fish version
+    echo "⚠️  Skipping fzf.fish plugin installation due to compatibility issues"
+    echo "   You can manually install it later with: fisher install PatrickF1/fzf.fish"
+
     # Add PATH exports to Fish config
+    echo "" >> ~/.config/fish/config.fish
+    echo '# Additional PATH exports added by setup.sh' >> ~/.config/fish/config.fish
     echo 'set -gx PATH $HOME/.npm-global/bin $PATH' >> ~/.config/fish/config.fish
     echo 'set -gx PATH $HOME/.local/bin $PATH' >> ~/.config/fish/config.fish  
     echo 'set -gx PATH $HOME/.deno/bin $PATH' >> ~/.config/fish/config.fish
