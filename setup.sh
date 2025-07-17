@@ -31,21 +31,11 @@ fnm default 20
 eval "$(fnm env)"
 fnm use 20
 
-# Configure npm for user-writable global installs
-mkdir -p ~/.npm-global
-npm config set prefix '~/.npm-global'
-export PATH="$HOME/.npm-global/bin:$PATH"
-
-# Add npm global bin to PATH in bashrc
-echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.bashrc
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
-echo 'export PATH="$HOME/.deno/bin:$PATH"' >> ~/.bashrc
-echo 'export PATH="$HOME/.local/share/fnm:$PATH"' >> ~/.bashrc
-
-
 # Install Python uv
 curl -LsSf https://astral.sh/uv/install.sh | sh
 export PATH="$HOME/.local/bin:$PATH"
+
+
 
 # Install system tools (fish, tmux, fzf, ripgrep, bat, tree) automatically
 # Detect package manager and install tools
@@ -87,7 +77,7 @@ install_system_tools() {
     command -v tmux >/dev/null 2>&1 && echo "  ✅ tmux" || echo "  ❌ tmux"
     command -v fzf >/dev/null 2>&1 && echo "  ✅ fzf" || echo "  ❌ fzf"
     command -v rg >/dev/null 2>&1 && echo "  ✅ ripgrep" || echo "  ❌ ripgrep"
-    command -v bat >/dev/null 2>&1 && echo "  ✅ bat" || echo "  ❌ bat"
+    command -v batcat >/dev/null 2>&1 && echo "  ✅ bat" || echo "  ❌ bat"
     command -v tree >/dev/null 2>&1 && echo "  ✅ tree" || echo "  ❌ tree"
 }
 
@@ -106,14 +96,6 @@ fi
 curl -fsSL https://deno.land/install.sh | sh
 export PATH="$HOME/.deno/bin:$PATH"
 
-# Set fish as default shell (if fish is installed)
-if command -v fish >/dev/null 2>&1; then
-    sudo chsh -s $(which fish) $USER
-    echo "✅ Fish shell set as default"
-else
-    echo "⚠️  Fish shell not found. Please install fish and run: sudo chsh -s \$(which fish) \$USER"
-    echo "   For now, continuing with bash shell..."
-fi
 
 # Install AWS CLI (system-agnostic)
 # Detect system architecture and OS
@@ -142,24 +124,6 @@ fi
 # Verify AWS CLI installation
 aws --version
 
-# Create bashrc.d directory and copy configs
-mkdir -p ~/.bashrc.d
-chmod 755 ~/.bashrc.d
-chmod +x "$SCRIPT_DIR/awsConfig"
-cp "$SCRIPT_DIR/awsConfig" ~/.bashrc.d/awsConfig
-
-# Copy git-alias to Bashrc
-chmod +x "$SCRIPT_DIR/git-alias"
-cp "$SCRIPT_DIR/git-alias" ~/.bashrc.d/git-alias
-
-
-# Apply Gitconfig provider for github (initialize git if needed)
-cd ~
-git init --quiet || true
-~/gitconfig-provider/gitconfig-provider addConfig --provider=Github --key=user.email --value=$GITHUB_USER_EMAIL
-~/gitconfig-provider/gitconfig-provider addConfig --provider=Github --key=user.name --value=$GITHUB_USER_NAME
-cd "$SCRIPT_DIR"
-
 # Install llm using uv
 uv tool install llm
 
@@ -172,21 +136,12 @@ export PATH="$HOME/.local/share/fnm:$PATH"
 # Setup Fish shell configuration (only if fish is available)
 if command -v fish >/dev/null 2>&1; then
     # Setup Fish shell configuration
+    
     mkdir -p ~/.config/fish
     cp "$SCRIPT_DIR/fish-config.fish" ~/.config/fish/config.fish
 
-    # Skip fzf.fish plugin installation due to compatibility issues
-    # Users can manually install fzf.fish if they have a compatible fish version
-    echo "⚠️  Skipping fzf.fish plugin installation due to compatibility issues"
-    echo "   You can manually install it later with: fisher install PatrickF1/fzf.fish"
+    fisher install PatrickF1/fzf.fish
 
-    # Add PATH exports to Fish config
-    echo "" >> ~/.config/fish/config.fish
-    echo '# Additional PATH exports added by setup.sh' >> ~/.config/fish/config.fish
-    echo 'set -gx PATH $HOME/.npm-global/bin $PATH' >> ~/.config/fish/config.fish
-    echo 'set -gx PATH $HOME/.local/bin $PATH' >> ~/.config/fish/config.fish  
-    echo 'set -gx PATH $HOME/.deno/bin $PATH' >> ~/.config/fish/config.fish
-    echo 'set -gx PATH $HOME/.local/share/fnm $PATH' >> ~/.config/fish/config.fish
     echo "✅ Fish shell configuration completed"
 else
     echo "⚠️  Fish shell not found. Skipping fish configuration."
@@ -225,6 +180,37 @@ echo "Verifying Node.js installation..."
 node --version
 npm --version
 
+# Configure npm for user-writable global installs
+mkdir -p ~/.npm-global
+npm config set prefix '~/.npm-global'
+export PATH="$HOME/.npm-global/bin:$PATH"
+
+# Add npm global bin to PATH in bashrc
+echo 'export PATH="$HOME/.npm-global/bin:$PATH"' >> ~/.bashrc
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+echo 'export PATH="$HOME/.deno/bin:$PATH"' >> ~/.bashrc
+echo 'export PATH="$HOME/.local/share/fnm:$PATH"' >> ~/.bashrc
+
+
+# Create bashrc.d directory and copy configs
+mkdir -p ~/.bashrc.d
+chmod 755 ~/.bashrc.d
+chmod +x "$SCRIPT_DIR/awsConfig"
+cp "$SCRIPT_DIR/awsConfig" ~/.bashrc.d/awsConfig
+
+# Copy git-alias to Bashrc
+chmod +x "$SCRIPT_DIR/git-alias"
+cp "$SCRIPT_DIR/git-alias" ~/.bashrc.d/git-alias
+
+
+# Apply Gitconfig provider for github (initialize git if needed)
+cd ~
+git init --quiet || true
+~/gitconfig-provider/gitconfig-provider addConfig --provider=Github --key=user.email --value=$GITHUB_USER_EMAIL
+~/gitconfig-provider/gitconfig-provider addConfig --provider=Github --key=user.name --value=$GITHUB_USER_NAME
+cd "$SCRIPT_DIR"
+
+
 # Install Claude Code CLI
 echo "Installing Claude Code CLI..."
 npm install -g @anthropic-ai/claude-code
@@ -233,4 +219,13 @@ npm install -g @anthropic-ai/claude-code
 echo "Installing Gemini CLI..."
 npm install -g @google/gemini-cli
 
+# clone-privte-repo https://github.com/PrashamTrivedi/claudeSettings ~/.claude
+
+
+
 echo "Setup completed successfully!"
+
+echo "Please complete the following steps for smooth work
+0. Configure your github login and password (if possible downoad gh cli)
+1. Checkout claude code settings and apply them on 
+2. Set fish as default shell"
